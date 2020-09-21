@@ -22,6 +22,7 @@ contadorposicion = 0
 
 #inicializar las variables
 imagendeck = []
+imagendeck1 = []
 
 
 
@@ -62,6 +63,8 @@ center(ventana)
 ventana.iconbitmap(".\Poker Cards\Images\Poker Icon 1.ico")
 
 
+
+
 #Etitulo =Label(contenedor,text="BlackJack", font=("Arial",40,"bold"))
 #Etitulo.place(x=370,y=20)
 
@@ -75,9 +78,10 @@ Decklabel.place(x=205,y=20)
 labelIP = Label(contenedor, text = "IP Address", font = ("Arial",15))
 labelIP.place(x=300, y=320)
 ip = StringVar()
-entryIP = Entry(contenedor, textvariable = ip)
+entryIP = Entry(contenedor,textvariable = ip)
 entryIP.place(x=420, y=320)
 entryIP.config(width = 20,font = ("Arial",15))
+entryIP.insert(0,"Hola ")
 
 #codigo para ingresar el Host
 labelHost = Label(contenedor, text = "Host", font = ("Arial",15))
@@ -112,11 +116,21 @@ BotonStart = Button(contenedor, text = "Jugar", font = ("Arial", 14), width = 12
 BotonStart.place(x=460, y=560)
 BotonStart.config(command = lambda :Marcador(str(nombre.get())))
 
+#frame para colocar las cartas 
+framecartas = Frame(contenedor)
+framecartas.place_forget()
+
 
 def Marcador(nombre):
+
+    
+        
     global labelentry, BotonOK, entrynombre, Botoniniciar, BotonStart, Decklabel
     global nombrejugador, TextoBoton, totalmarcador
     #nombrejugador = nombre
+
+   
+    
     BotonStart.destroy()
     entrynombre.destroy()
     Decklabel.destroy()
@@ -128,31 +142,98 @@ def Marcador(nombre):
     entryIP.destroy()
     labelHost.destroy()
     entryHost.destroy()
-    
+    #frame para colocar las cartas 
+    framecartas.place(width=800, height=210, x=18, y=430)
+  
+    #Marcador Crupier -------------------------------------------------------------
+    framemarcador1 = Frame(contenedor , bg="#373731")
+    framemarcador1.config(bd=5, relief="ridge")
+    framemarcador1.place(width=200, height=90, x=18, y=10)
+   
 
+    titulomarcador = Label(framemarcador1, text = "Marcador",font = ("Arial",12, "bold") , fg="#c5ad3d" ,bg="#373731")
+    titulomarcador.place(x=50 , y= 3)
+
+    j1marcador = Label(framemarcador1, text = "Crupier", font = ("Arial",12), bg="#373731" , fg="white")
+    j1marcador.place(x=10 , y= 25)
+
+    j1marcador = Label(framemarcador1, text = "Puntaje:", font = ("Arial",12), bg="#373731" , fg="white")
+    j1marcador.place(x=10 , y= 50)
+
+    #----------------------------------------------------------------------#
+
+    #Marcador Jugador
     framemarcador = Frame(contenedor , bg="#373731")
     framemarcador.config(bd=5, relief="ridge")
-    framemarcador.place(width=200, height=90, x=18, y=10)
+    framemarcador.place(width=200, height=90, x=18, y=320)
 
-    #frame para colocar las cartas 
-    framecartas = Frame(contenedor)
-    framecartas.place(width=680, height=210, x=18, y=417)
-
-
-    titulomarcador = Label(framemarcador, text = "Partida",font = ("Arial",20, "bold") , fg="#c5ad3d" ,bg="#373731")
-    titulomarcador.place(x=50 , y= 10)
+    titulomarcador = Label(framemarcador, text = "Marcador",font = ("Arial",12, "bold") , fg="#c5ad3d" ,bg="#373731")
+    titulomarcador.place(x=50 , y= 3)
 
     j1marcador = Label(framemarcador, text = "Jugador 1:", font = ("Arial",12), bg="#373731" , fg="white")
+    j1marcador.place(x=10 , y= 25)
+
+    j1marcador = Label(framemarcador, text = "Puntaje:", font = ("Arial",12), bg="#373731" , fg="white")
     j1marcador.place(x=10 , y= 50)
 
     nombremarcador = Label(framemarcador, text = nombre, font = ("Arial",12), bg="#373731" , fg="white")
     nombremarcador.place(x=100 , y= 50)
 
+    #-------------------------------------------------------------------#
+
+    #--------------------- Frame Para Crupier--------------------------
+    framecartas1 = Frame(contenedor)
+    framecartas1.place(width=680, height=210, x=18, y=110)
+
+    card = random.choice(allcards)
+    palo = random.choice(allsymbols)
+    carta = card+palo
+
+    imagenes.append(setimagen(DirCartas+carta+".png", 150, 180))
+    labelcartas = Label(framecartas1, image = imagenes[indice])
+    #labelcartas.grid(row = 1, column = numerocolumna, padx = 10, pady = 10)
+    labelcartas.place(x=contadorposicion, y = 0)
+    
+   
+
+
+
+    
+    #--------------- Imagen de las Cartas ---------------------
     DeckDir = ".\\" + "/Poker Cards/Images/Deck.png"
     imagendeck.append(setimagen(DeckDir,180,180))
     Decklabel = Label(contenedor, image = imagendeck[1])
     Decklabel.place(x=840,y=10)
 
+
+    #-----------------------Botones Para el jugador-----------------------------------
+
+    DeckDir = ".\\" + "/Poker Cards/Images/carta.png"
+    imagendeck.append(setimagen(DeckDir,80,40))
+    Decklabel = Button(contenedor, image = imagendeck[2] , text="Pedir Carta", compound="top" , command = pedirCarta)
+    Decklabel.place(x=890,y=400)
+
+    DeckDir = ".\\" + "/Poker Cards/Images/plantarse.png"
+    imagendeck.append(setimagen(DeckDir,80,40))
+    Decklabel = Button(contenedor, image = imagendeck[3] , text="  Plantarse ", compound="top")
+    Decklabel.place(x=890,y=480)
+
+    DeckDir = ".\\" + "/Poker Cards/Images/salida.png"
+    imagendeck.append(setimagen(DeckDir,80,40))
+    Decklabel = Button(contenedor, image = imagendeck[4] , text="     Salir      ", compound="top")
+    Decklabel.place(x=890,y=560)
+
+    #----------------------------------------------------------------------------------------
+
+  
+
+    
+
+
+def pedirCarta():
+
+    global indice,  contadorposicion
+   
 
     card = random.choice(allcards)
     palo = random.choice(allsymbols)
@@ -163,7 +244,13 @@ def Marcador(nombre):
     #labelcartas.grid(row = 1, column = numerocolumna, padx = 10, pady = 10)
     labelcartas.place(x=contadorposicion, y = 0)
 
-    
+    contadorposicion+=130
+    #numerocolumna+= 1
+    indice+=1
+    labelsarray.append(labelcartas)
+
+    #imagef = PhotoImage(file ="table.png")
+    #fondo = Label(contenedor, image = imagef).place(x=0,y=0)
 
     #TextoBoton.set("Pedir Carta")
     #Botoniniciar = Button(contenedor, textvariable=TextoBoton, font=("Arial", 10), width=45, command = InicioJuego)

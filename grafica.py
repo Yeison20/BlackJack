@@ -43,6 +43,12 @@ def center(toplevel):
        y = h/2 - size[1]/2
        toplevel.geometry("%dx%d+%d+%d" % (size + (x, y)))
 
+def switch():
+        if BotonEnviar["state"] == NORMAL:
+            BotonStart["state"] = NORMAL
+        else:
+            BotonStart["state"] = DISABLED
+
 
 
 #Creacion de la ventana
@@ -63,21 +69,47 @@ ventana.iconbitmap(".\Poker Cards\Images\Poker Icon 1.ico")
 DeckDir = ".\\" + "Poker Cards\Images\logo.png"
 imagendeck.append(setimagen(DeckDir,580,630))
 Decklabel = Label(contenedor, image = imagendeck[0])
-Decklabel.place(x=205,y=120)
+Decklabel.place(x=205,y=20)
 
+#codigo para ingresar la IP
+labelIP = Label(contenedor, text = "IP Address", font = ("Arial",15))
+labelIP.place(x=300, y=320)
+ip = StringVar()
+entryIP = Entry(contenedor, textvariable = ip)
+entryIP.place(x=420, y=320)
+entryIP.config(width = 20,font = ("Arial",15))
 
+#codigo para ingresar el Host
+labelHost = Label(contenedor, text = "Host", font = ("Arial",15))
+labelHost.place(x=360, y=360)
+host = int()
+entryHost = Entry(contenedor, textvariable = host)
+entryHost.place(x=420, y=360)
+entryHost.config(width = 20,font = ("Arial",15))
+
+#crear el boton de PEnviar datos
+BotonEnviar = Button(contenedor, text = "Enviar", font = ("Arial", 15), width = 12, height=1, bg = "#c5ad3d", command=switch)
+BotonEnviar.place(x=460, y=400)
 
 #codigo para ingresar el nombre del jugador
-labelentry = Label(contenedor, text = "Nombre del Jugador ", font = ("Arial",15))
-labelentry.place(x=420, y=400)
+labelentry = Label(contenedor, text = "Nombre", font = ("Arial",15))
+labelentry.place(x=330, y=460)
 nombre = StringVar()
 entrynombre = Entry(contenedor, textvariable = nombre)
-entrynombre.place(x=400, y=440)
+entrynombre.place(x=420, y=460)
 entrynombre.config(width = 20,font = ("Arial",15))
 
+#codigo para ingresar el numero de la C.C.
+labelCedula = Label(contenedor, text = "Cedula:", font = ("Arial",15))
+labelCedula.place(x=330, y=500)
+cedula = StringVar()
+entryCedula = Entry(contenedor, textvariable = cedula)
+entryCedula.place(x=420, y=500)
+entryCedula.config(width = 20,font = ("Arial",15))
+
 #crear el boton de PLAY
-BotonStart = Button(contenedor, text = "Start Game", font = ("Arial", 10), width = 20, height=2, bg = "#c5ad3d")
-BotonStart.place(x=425, y=490)
+BotonStart = Button(contenedor, text = "Jugar", font = ("Arial", 14), width = 12, height=1, bg = "#c5ad3d", state=DISABLED)
+BotonStart.place(x=460, y=560)
 BotonStart.config(command = lambda :Marcador(str(nombre.get())))
 
 
@@ -89,6 +121,14 @@ def Marcador(nombre):
     entrynombre.destroy()
     Decklabel.destroy()
     labelentry.destroy()
+    BotonEnviar.destroy()
+    labelCedula.destroy()
+    entryCedula.destroy()
+    labelIP.destroy()
+    entryIP.destroy()
+    labelHost.destroy()
+    entryHost.destroy()
+    
 
     framemarcador = Frame(contenedor , bg="#373731")
     framemarcador.config(bd=5, relief="ridge")
@@ -129,15 +169,17 @@ def Marcador(nombre):
     #Botoniniciar = Button(contenedor, textvariable=TextoBoton, font=("Arial", 10), width=45, command = InicioJuego)
     #Botoniniciar.place(x=200, y=376)
 
-    totallabel = Label(framemarcador, text = "Total:", font = ("Arial",10,"bold"), bg = "grey")
-    totallabel.grid(row=3, column = 1, sticky = "E" )
+    #totallabel = Label(framemarcador, text = "Total:", font = ("Arial",10,"bold"), bg = "grey")
+    #totallabel.grid(row=3, column = 1, sticky = "E" )
 
-    totalmarcador = Label(framemarcador, text= str(puntajetotal), font=("Arial", 10, "bold"), bg="grey")
-    totalmarcador.grid(row=3, column=2, sticky="W")
+    #totalmarcador = Label(framemarcador, text= str(puntajetotal), font=("Arial", 10, "bold"), bg="grey")
+    #totalmarcador.grid(row=3, column=2, sticky="W")
 
     # Creacion de un Hilo para que tenga un minimo retraso entre cambio de texto
     #hilo=threading.Thread(target=mensaje, args=("Buenas, Jugadores, Vamos a empezar la Partida de BlackJack",))
     #hilo.start()
     #labelentry.config(text = "Buenas, Jugadores, Vamos a empezar la Partida de BlackJack")
+    
 
+    
 ventana.mainloop()

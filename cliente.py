@@ -14,7 +14,7 @@ from _thread import *
 def ini():
     #host = input("Server Address: ")
     #port = int(input("Port: "))
-    host = "192.168.1.56"
+    host = "192.168.0.23"
     port = 55
     return host, port
 

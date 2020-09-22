@@ -16,7 +16,7 @@ from blackJack import Jugador, Mazo
 def ini():
     #host = input("Host: ")
     #port = int(input("Port: "))
-    host = "192.168.1.56"
+    host = "192.168.0.19"
     port = 55
     return host, port
 
@@ -279,7 +279,11 @@ def main():
 
     conn,addr = conexiones(s)
     enviarEspecial(conn)               # Espero conexion del 1 cliente
-    start_new_thread(enviar,(conn,))
+    while(True):
+        salida = input("")
+        if(salida == "1"):
+            break
+    '''start_new_thread(enviar,(conn,))
     time.sleep(2)
     start_new_thread(recibir,(conn,))
 
@@ -295,7 +299,7 @@ def main():
             conn3,addr3 = conexiones(s)
             enviarEspecial(conn3)
             start_new_thread(recibir,(conn3,))
-            bandera = False
+            bandera = False'''
 
 
 main()

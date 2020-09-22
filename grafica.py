@@ -319,7 +319,7 @@ def ReiniciarJuego():
     opcion = tkMessageBox.askyesno("Retry?", "Quisieras volver a Jugar?")
 
     if(opcion==True):
-        if saldo > 0:
+        if int(saldo) > 0 :
             global indice, puntajetotal, contadorposicion, totalmarcador, jugador , crupier, totalmarcador1, mazo, saldoLabel
             del labelsarray[:]
             del imagenes[:]

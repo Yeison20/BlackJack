@@ -128,7 +128,10 @@ comenzarJ = False
 
 def main():
 
-    host, port = ini()
+    #host, port = ini()
+    host = entryIP.get()
+    port = int(entryHost.get())
+
     s = crearSocket()
     intentoConexion(host,port,s)
     recibirEspecial(s)
@@ -254,7 +257,7 @@ ip = StringVar()
 entryIP = Entry(contenedor, textvariable=ip)
 entryIP.place(x=420, y=320)
 entryIP.config(width=20, font=("Arial", 15))
-entryIP.insert(0, "Hola ")
+#entryIP.insert(0, "19")
 
 # codigo para ingresar el Host
 labelHost = Label(contenedor, text="Host", font=("Arial", 15))
@@ -263,6 +266,8 @@ host = int()
 entryHost = Entry(contenedor, textvariable=host)
 entryHost.place(x=420, y=360)
 entryHost.config(width=20, font=("Arial", 15))
+entryHost.insert(0, "55")
+
 
 # crear el boton de PEnviar datos
 BotonEnviar = Button(contenedor, text="Enviar", font=(
@@ -415,6 +420,9 @@ def Marcador(nombre):
     saldomarcador = Label(framemarcador, text="Saldo:",
                        font=("Arial", 12), bg="#373731", fg="white")
     saldomarcador.place(x=10, y=70)
+
+    saldomarcador = Label(contenedor, text="La apuesta es de 100", font=("Arial", 14), fg="black")
+    saldomarcador.place(x=250, y=20)
 
     saldoLabel = Label(framemarcador, text=saldo, font=("Arial", 12), bg="#373731", fg="white")
     saldoLabel.place(x=100, y=70)

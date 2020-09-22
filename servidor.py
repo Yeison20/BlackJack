@@ -14,10 +14,9 @@ from blackJack import Jugador, Mazo
 
 #ini() -- Pide al usuario el host y puerto.
 def ini():
-    #host = input("Host: ")
-    #port = int(input("Port: "))
-    host = "192.168.0.19"
-    port = 55
+    host = input("Host: ")
+    port = int(input("Port: "))
+
     return host, port
 
 #crearSocket() -- Retorna un nuevo socket siguiendo el esquema del protocolo TCP

@@ -134,7 +134,7 @@ def main():
     recibirEspecial(s)
     print("\nConnection To Server Established!\nThe server is:", host+":"+str(port)+"\n")
     print("Write your messages\n")
-    
+
     '''start_new_thread(recibir, (s,))
     start_new_thread(enviar, (s,))
     
@@ -189,6 +189,8 @@ indice = 0
 # numerocolumna = 1
 puntajetotal = 0
 contadorposicion = 0
+totalmarcador = ""
+totalsaldo = 0
 
 # inicializar las variables
 imagendeck = []
@@ -223,6 +225,7 @@ def switch():
         main()
     else:
         BotonStart["state"] = DISABLED
+
 
 
 # Creacion de la ventana
@@ -275,18 +278,19 @@ entrynombre.place(x=420, y=460)
 entrynombre.config(width=20, font=("Arial", 15))
 
 # codigo para ingresar el numero de la C.C.
-labelCedula = Label(contenedor, text="Cedula:", font=("Arial", 15))
-labelCedula.place(x=330, y=500)
-cedula = StringVar()
-entryCedula = Entry(contenedor, textvariable=cedula)
-entryCedula.place(x=420, y=500)
-entryCedula.config(width=20, font=("Arial", 15))
+labelSaldo = Label(contenedor, text="Saldo:", font=("Arial", 15))
+labelSaldo.place(x=330, y=500)
+entrySaldo = Entry(contenedor)
+entrySaldo.place(x=420, y=500)
+entrySaldo.config(width=20, font=("Arial", 15))
+
 
 # crear el boton de PLAY
 BotonStart = Button(contenedor, text="Jugar", font=(
     "Arial", 14), width=12, height=1, bg="#c5ad3d", state=DISABLED)
 BotonStart.place(x=460, y=560)
 BotonStart.config(command=lambda: Marcador(str(nombre.get())))
+
 
 # frame para colocar las cartas
 framecartas = Frame(contenedor)
@@ -302,29 +306,76 @@ framecartas1 = Frame(contenedor)
 framecartas1.place_forget()
 
 
+
+def ReiniciarJuego():
+
+    global saldo
+
+    opcion = tkMessageBox.askyesno("Retry?", "Quisieras volver a Jugar?")
+
+    if(opcion==True):
+        if saldo > 0:
+            global indice, puntajetotal, contadorposicion, totalmarcador, jugador , crupier, totalmarcador1, mazo, saldoLabel
+            del labelsarray[:]
+            del imagenes[:]
+            indice = 0
+            puntajetotal = 0
+            contadorposicion = 0
+            totalmarcador.config(text = "    ")
+            totalmarcador1.config(text = "   ")
+            jugador.mano = []
+            crupier.mano = []
+            Decklabel1["state"] = NORMAL
+            Decklabel2["state"] = NORMAL
+            mazo = []
+            
+
+            for pinta in allsymbols:
+                for valor in allcards:
+                    mazo.append(valor+pinta)
+            
+            
+            carta = random.choice(mazo)
+            crupier.mano.append(carta)
+
+            imagenes.append(setimagen(DirCartas+carta+".png", 150, 180))
+            labelcartas = Label(framecartas1, image=imagenes[indice])
+            # labelcartas.grid(row = 1, column = numerocolumna, padx = 10, pady = 10)
+            labelcartas.place(x=contadorposicion, y=0)
+            indice += 1
+
+        else:
+            tkMessageBox.showinfo("SIN SALDO!", "No puede seguir apostando, saldo es de 0 ")
+            ventana.destroy()
+        
+
+saldo = 0
+
 def Marcador(nombre):
 
-    global labelentry, BotonOK, entrynombre, Botoniniciar, BotonStart, Decklabel
-    global nombrejugador, TextoBoton, totalmarcador
+    global labelentry, BotonOK, entrynombre, Botoniniciar, BotonStart, Decklabel, Decklabel1,Decklabel2 
+    global nombrejugador, TextoBoton, totalmarcador  , saldoLabel , saldomarcador, saldo
     global allcards, allsymbols, indice, mazo
     # nombrejugador = nombre
+    
+    saldo = entrySaldo.get()
 
     BotonStart.destroy()
     entrynombre.destroy()
     Decklabel.destroy()
     labelentry.destroy()
     BotonEnviar.destroy()
-    labelCedula.destroy()
-    entryCedula.destroy()
+    labelSaldo.destroy()
+    entrySaldo.destroy()
     labelIP.destroy()
     entryIP.destroy()
     labelHost.destroy()
     entryHost.destroy()
     # frame para colocar las cartas
-    framecartas.place(width=800, height=210, x=18, y=430)
+    framecartas.place(width=800, height=210, x=18, y=440)
 
     framemarcador.config(bd=5, relief="ridge")
-    framemarcador.place(width=200, height=90, x=18, y=320)
+    framemarcador.place(width=200, height=110, x=18, y=320)
 
     framecartas1.place(width=680, height=210, x=18, y=110)
 
@@ -361,9 +412,16 @@ def Marcador(nombre):
                        font=("Arial", 12), bg="#373731", fg="white")
     j1marcador.place(x=10, y=50)
 
+    saldomarcador = Label(framemarcador, text="Saldo:",
+                       font=("Arial", 12), bg="#373731", fg="white")
+    saldomarcador.place(x=10, y=70)
+
+    saldoLabel = Label(framemarcador, text=saldo, font=("Arial", 12), bg="#373731", fg="white")
+    saldoLabel.place(x=100, y=70)
+
     nombremarcador = Label(framemarcador, text=nombre, font=(
         "Arial", 12), bg="#373731", fg="white")
-    nombremarcador.place(x=100, y=50)
+    nombremarcador.place(x=100, y=25)
 
     #-------------------------------------------------------------------#
 
@@ -399,26 +457,28 @@ def Marcador(nombre):
 
     DeckDir = ".\\" + "/Poker Cards/Images/carta.png"
     imagendeck.append(setimagen(DeckDir, 80, 40))
-    Decklabel = Button(
-        contenedor, image=imagendeck[2], text="Pedir Carta", compound="top", command=pedirCarta)
-    Decklabel.place(x=890, y=400)
+    Decklabel2 = Button(contenedor, image=imagendeck[2], text="Pedir Carta", compound="top", command=pedirCarta)
+    Decklabel2.place(x=890, y=400)
 
     DeckDir = ".\\" + "/Poker Cards/Images/plantarse.png"
     imagendeck.append(setimagen(DeckDir, 80, 40))
-    Decklabel = Button(
-        contenedor, image=imagendeck[3], text="  Plantarse ", compound="top", command=plantarse)
-    Decklabel.place(x=890, y=480)
+    Decklabel1 = Button(contenedor, image=imagendeck[3], text="  Plantarse ", compound="top", command=plantarse)
+    Decklabel1.place(x=890, y=480)
+
+    
+    
 
     DeckDir = ".\\" + "/Poker Cards/Images/salida.png"
     imagendeck.append(setimagen(DeckDir, 80, 40))
     Decklabel = Button(
-        contenedor, image=imagendeck[4], text="     Salir      ", compound="top")
+        contenedor, image=imagendeck[4], text="     Salir      ", compound="top", command=cerrar)
     Decklabel.place(x=890, y=560)
 
     # ----------------------------------------------------------------------------------------
 
+    
 def addCrupier(carta):
-    global DirCartas, imagenes, indice, contadorposicion
+    global DirCartas, imagenes, indice, contadorposicion , totalmarcador
 
     totalmarcador = Label(framemarcador1, text=contar_mano(crupier.mano), font=("Arial", 13), fg="white", bg="#373731")
     totalmarcador.place(x=70, y=50)
@@ -430,53 +490,69 @@ def addCrupier(carta):
     indice += 1
     contadorposicion += 130
 
-    time.sleep(5)
+    time.sleep(2)
 
 def plantarse():
 
-    global crupier, jugador, indice, mazo, contadorposicion
+    global crupier, jugador, indice, mazo, contadorposicion , Decklabel1 ,Decklabel2, totalsaldo, saldo
 
-    contadorposicion = 130
+    
+    if len(jugador.mano) >= 2:
+        contadorposicion = 130
 
-    while (contar_mano(crupier.mano) < contar_mano(jugador.mano) and contar_mano(crupier.mano) < 21):
-
-
-
-        carta = random.choice(mazo)
-
-        print("TAMANO Antes DE BORRA")
-        print(len(mazo))
-
-        mazo.remove(carta)
-
-        print("TAMANO DESPUES DE BORRA")
-        print(len(mazo))
-
-        crupier.mano.append(carta)
-
-        print("total CRUPIER")
-        print(contar_mano(crupier.mano))
-
-        addCrupier(carta)
+        while (contar_mano(crupier.mano) < contar_mano(jugador.mano) and contar_mano(crupier.mano) < 21):
 
 
-    if contar_mano(crupier.mano) > 21:
-        tkMessageBox.showinfo(
-            "GANO!", "Perdio la maquina!\nTotal: " + str(contar_mano(crupier.mano)))
 
-    elif contar_mano(crupier.mano) == contar_mano(jugador.mano):
-        tkMessageBox.showinfo(
-            "EMPATE!", "EMPATE!\nTotal: " + str(contar_mano(crupier.mano)))
+            carta = random.choice(mazo)
 
+            print("TAMANO Antes DE BORRA")
+            print(len(mazo))
+
+            mazo.remove(carta)
+
+            print("TAMANO DESPUES DE BORRA")
+            print(len(mazo))
+
+            crupier.mano.append(carta)
+
+            print("total CRUPIER")
+            print(contar_mano(crupier.mano))
+
+            addCrupier(carta)
+
+
+        if contar_mano(crupier.mano) > 21:
+            tkMessageBox.showinfo(
+                "GANO!", "Perdio la maquina!\nTotal: " + str(contar_mano(crupier.mano)))
+            saldo = int(saldo) + 100
+           
+
+        elif contar_mano(crupier.mano) == contar_mano(jugador.mano):
+            tkMessageBox.showinfo(
+                "EMPATE!", "EMPATE!\nTotal: " + str(contar_mano(crupier.mano)))
+
+        else:
+            tkMessageBox.showinfo(
+                "PERDIO!", "Gano la maquina!\nTotal: " + str(contar_mano(crupier.mano)))
+            saldo = int(saldo) - 100
+            
+
+        Decklabel1["state"] = DISABLED
+        Decklabel2["state"] = DISABLED
+        
+        saldoLabel = Label(framemarcador, text=saldo, font=("Arial", 12), bg="#373731", fg="white")
+        saldoLabel.place(x=100, y=70)
+
+        ReiniciarJuego()
     else:
-        tkMessageBox.showinfo(
-            "PERDIO!", "Gano la maquina!\nTotal: " + str(contar_mano(crupier.mano)))
-
+        tkMessageBox.showinfo("Aviso","Tiene que tomar 2 cartas antes de plantarse")
+    
 
 def pedirCarta():
 
-    global indice,  contadorposicion
-    global allcards, allsymbols, indice, jugador
+    global indice,  contadorposicion, totalmarcador , totalmarcador1
+    global allcards, allsymbols, indice, jugador, saldo
 
     card = random.choice(allcards)
     palo = random.choice(allsymbols)
@@ -505,9 +581,8 @@ def pedirCarta():
     indice += 1
     labelsarray.append(labelcartas)
 
-    totalmarcador = Label(framemarcador, text=contar_mano(
-        jugador.mano), font=("Arial", 13), fg="white", bg="#373731")
-    totalmarcador.place(x=70, y=50)
+    totalmarcador1 = Label(framemarcador, text=contar_mano(jugador.mano), font=("Arial", 13), fg="white", bg="#373731")
+    totalmarcador1.place(x=70, y=50)
 
     # imagef = PhotoImage(file ="table.png")
     # fondo = Label(contenedor, image = imagef).place(x=0,y=0)
@@ -523,7 +598,14 @@ def pedirCarta():
 
     if contar_mano(jugador.mano) > 21:
         tkMessageBox.showinfo(
-            "PERDIO!", "Perdio, la suma de las cartas es mayor a 21!\nTotal: 21")
+            "PERDIO!", "Perdio, la suma de las cartas es mayor a 21!\nTotal: " + str(contar_mano(jugador.mano)))
+        saldo = int(saldo) - 100
 
+        saldoLabel = Label(framemarcador, text=saldo, font=("Arial", 12), bg="#373731", fg="white")
+        saldoLabel.place(x=100, y=70)
+        ReiniciarJuego()
+
+def cerrar():
+    ventana.destroy()
 
 ventana.mainloop()

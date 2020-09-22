@@ -13,6 +13,12 @@ carpetaraiz=os.path.dirname(__file__)
 DirCartas = "."+"\\Poker Cards\\PNG\\"
 allcards = ["A","2","3","4","5","6","7","8","9","10","J","Q","K"]
 allsymbols = ["H","S","C","D"]
+mazo = []
+
+for pinta in allsymbols:
+    for valor in allcards:
+        mazo.append(valor+pinta)
+
 labelsarray = []
 imagenes = []
 indice = 0
@@ -127,6 +133,7 @@ def Marcador(nombre):
         
     global labelentry, BotonOK, entrynombre, Botoniniciar, BotonStart, Decklabel
     global nombrejugador, TextoBoton, totalmarcador
+    global allcards, allsymbols, indice, mazo
     #nombrejugador = nombre
 
    
@@ -187,12 +194,21 @@ def Marcador(nombre):
 
     card = random.choice(allcards)
     palo = random.choice(allsymbols)
-    carta = card+palo
+    carta = random.choice(mazo)
+
+    print("TAMANO Antes DE BORRA")
+    print(len(mazo))
+
+    mazo.remove(carta)
+
+    print("TAMANO DESPUES DE BORRA")
+    print(len(mazo))
 
     imagenes.append(setimagen(DirCartas+carta+".png", 150, 180))
     labelcartas = Label(framecartas1, image = imagenes[indice])
     #labelcartas.grid(row = 1, column = numerocolumna, padx = 10, pady = 10)
     labelcartas.place(x=contadorposicion, y = 0)
+    indice += 1
     
    
 
@@ -233,11 +249,21 @@ def Marcador(nombre):
 def pedirCarta():
 
     global indice,  contadorposicion
+    global allcards, allsymbols, indice
    
 
     card = random.choice(allcards)
     palo = random.choice(allsymbols)
-    carta = card+palo
+    carta = random.choice(mazo)
+
+    print("TAMANO Antes EN JUGADOR DE BORRA")
+    print(len(mazo))
+
+    mazo.remove(carta)
+
+    print("TAMANO DESPUES EN JUGADOR DE BORRA")
+    print(len(mazo))
+
 
     imagenes.append(setimagen(DirCartas+carta+".png", 150, 180))
     labelcartas = Label(framecartas, image = imagenes[indice])
